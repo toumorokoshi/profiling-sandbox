@@ -1,0 +1,26 @@
+categories:
+  - id: 1
+    name: CPU
+tracks:
+  - id: 1
+    name: CPU0
+    category_id: 1
+  - id: 2
+    name: CPUl
+    category_id: 1
+  - id: 3
+    name: CPU2
+    category_id: 1
+spans:
+  - track_id: 1
+    name: /usr/bin/ls
+    start: 0
+    end: 100
+  - track_id: 1
+    name: /usr/bin/less
+    start: 120
+    end: 140
+events:
+  - track_id: 1
+    name: sched_switch
+    time_ns: 1

@@ -1,0 +1,52 @@
+// trace.proto contains data types used to organize tracing / profiling
+// data.
+syntax = "proto3";
+
+package trace;
+
+// Categories are used to organize tracks (e.g. perfetto tracks such as
+// CPU0, CPU1, etc.) into a single semantic category.
+message Category {
+    int32 id = 1; //
+    string name = 2;
+}
+
+// A track represents a specific system being tracked.
+message Track {
+    int32 id = 1;
+    string name = 2;
+    optional int64 category_id = 3;
+}
+
+// Spans can be implicitly nested
+// TODO(yft): should this be nested under tracks? it may
+//   make spans brittle if they can live under multiple tracks possibly.
+message Span {
+    // spans **must** be associated with a track.
+    int32 track_id = 1;
+    // A semantically meaningful name of the span.
+    // this value **should** have low cardinality - e.g. the
+    // name of a function or a system call, rather than the parameters
+    // passed to it. The span may be grouped by name in other use cases
+    // beyond tracing (e.g. flamegraphs)
+    string name = 2;
+    // nanosecond granularity is necessary for spans that require high
+    // granularity (e.g. CPU scheduling).
+    // ns timestamps **should be** relative to the start of the trace.
+    int64 start_time_ns = 3;
+    int64 end_time_ns = 4;
+}
+
+// Events are used to represent events that occur at a specific point in
+// time (e.g. a schedule switch on a CPU).
+//
+// They differ from spans in that they do not have a duration.
+// TODO(yft): should this be nested under events? events may fall
+//  under multiple tracks.
+message Event {
+    int32 track_id = 1;
+    // a semantic name for the event. This can be used for as a rudimentary form
+    // of grouping as well.
+    string name = 2;
+    int64 time_ns = 3;
+}
