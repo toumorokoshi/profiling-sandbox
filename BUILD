@@ -7,4 +7,7 @@ rust_library(
     srcs = glob(["src/*.rs"]),
     edition = "2021",
     version = "0.1.0",
+    deps = [
+        "@crate_index//flatbuffers",
+    ],
 )
