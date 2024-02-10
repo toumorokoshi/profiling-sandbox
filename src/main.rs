@@ -9,7 +9,9 @@ fn main() {
         name: Some(builder.create_string("foo")),
     };
     let category_offset = schema_generated::Category::create(&mut builder, &category_args);
-    let c = flatbuffers::get_root::<schema_generated::Category>(&category);
-    println!("{}", c.name());
+    builder.finish(category_offset, None);
+    let buf = builder.finished_data();
+    let category = flatbuffers::root::<schema_generated::Category>(&buf).unwrap();
+    println!("{}", category.name().unwrap());
     println!("Hello, world!");
 }
