@@ -533,3 +533,151 @@ impl core::fmt::Debug for Event<'_> {
       ds.finish()
   }
 }
+pub enum ProfileOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct Profile<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for Profile<'a> {
+  type Inner = Profile<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> Profile<'a> {
+  pub const VT_CATEGORIES: flatbuffers::VOffsetT = 4;
+  pub const VT_TRACKS: flatbuffers::VOffsetT = 6;
+  pub const VT_EVENTS: flatbuffers::VOffsetT = 8;
+  pub const VT_SPANS: flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    Profile { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    args: &'args ProfileArgs<'args>
+  ) -> flatbuffers::WIPOffset<Profile<'bldr>> {
+    let mut builder = ProfileBuilder::new(_fbb);
+    if let Some(x) = args.spans { builder.add_spans(x); }
+    if let Some(x) = args.events { builder.add_events(x); }
+    if let Some(x) = args.tracks { builder.add_tracks(x); }
+    if let Some(x) = args.categories { builder.add_categories(x); }
+    builder.finish()
+  }
+
+
+  #[inline]
+  pub fn categories(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Category<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Category>>>>(Profile::VT_CATEGORIES, None)}
+  }
+  #[inline]
+  pub fn tracks(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Track<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Track>>>>(Profile::VT_TRACKS, None)}
+  }
+  #[inline]
+  pub fn events(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Event<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Event>>>>(Profile::VT_EVENTS, None)}
+  }
+  #[inline]
+  pub fn spans(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Span<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Span>>>>(Profile::VT_SPANS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for Profile<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Category>>>>("categories", Self::VT_CATEGORIES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Track>>>>("tracks", Self::VT_TRACKS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Event>>>>("events", Self::VT_EVENTS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Span>>>>("spans", Self::VT_SPANS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct ProfileArgs<'a> {
+    pub categories: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Category<'a>>>>>,
+    pub tracks: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Track<'a>>>>>,
+    pub events: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Event<'a>>>>>,
+    pub spans: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Span<'a>>>>>,
+}
+impl<'a> Default for ProfileArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    ProfileArgs {
+      categories: None,
+      tracks: None,
+      events: None,
+      spans: None,
+    }
+  }
+}
+
+pub struct ProfileBuilder<'a: 'b, 'b> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b> ProfileBuilder<'a, 'b> {
+  #[inline]
+  pub fn add_categories(&mut self, categories: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<Category<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Profile::VT_CATEGORIES, categories);
+  }
+  #[inline]
+  pub fn add_tracks(&mut self, tracks: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<Track<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Profile::VT_TRACKS, tracks);
+  }
+  #[inline]
+  pub fn add_events(&mut self, events: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<Event<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Profile::VT_EVENTS, events);
+  }
+  #[inline]
+  pub fn add_spans(&mut self, spans: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<Span<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Profile::VT_SPANS, spans);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> ProfileBuilder<'a, 'b> {
+    let start = _fbb.start_table();
+    ProfileBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<Profile<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for Profile<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("Profile");
+      ds.field("categories", &self.categories());
+      ds.field("tracks", &self.tracks());
+      ds.field("events", &self.events());
+      ds.field("spans", &self.spans());
+      ds.finish()
+  }
+}

@@ -14,6 +14,10 @@ table Track {
     category_id:uint32;
 }
 
+// A span represents a time range in which a particular operation that
+// is being profiled occurred (e.g. a function call). It is named as such
+// to match the OpenTelemetry terminology.
+//
 // Spans can be implicitly nested
 // TODO(yft): should this be nested under tracks? it may
 //   make spans brittle if they can live under multiple tracks possibly.
@@ -45,4 +49,26 @@ table Event {
     // of grouping as well.
     name:string;
     time_ns:uint64;
+}
+
+// A profile represents the parent object in which all other information is
+// stored, named as a single "profile" action in which multiple spans and events
+// may be captured.
+//
+// data access has a few possible user journeys.
+// - accessing all spans starting at a particular timestamp (e.g. if you wanted
+//   to seek)
+// - accessing all of the spans pertaining to a specific category.
+//
+// To help speed this up, perfetto converts the data to a sql table by which to
+// read this information efficienctly
+// (https://perfetto.dev/docs/#trace-analysis).
+//
+// For the day where the flatbuffer-based format may be used directly, it would
+// be best to optimize for a common user journey.
+table Profile {
+    categories:[Category];
+    tracks:[Track];
+    events:[Event];
+    spans:[Span];
 }
