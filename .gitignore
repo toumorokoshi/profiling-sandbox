@@ -19,3 +19,6 @@ bazel-bin
 bazel-out
 bazel-profiling-sandbox
 bazel-testlogs
+
+# rust-analyzer bindings (device / file path specific)
+rust-project.json

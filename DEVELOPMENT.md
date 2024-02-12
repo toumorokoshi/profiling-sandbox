@@ -28,7 +28,10 @@ To vendor, run:
 cp "${PERFETTO_REPO_ROOT}/protos/perfetto/trace/perfetto_trace.proto" ./src/vendor/
 ```
 
-To generate, run:
+The protos will be rebuilt as part of a bazel target.
+
+## Rebuilding rust-analyzer bindings
 
 ```bash
+bazel run @rules_rust//tools/rust_analyzer:gen_rust_project
 ```

@@ -10,6 +10,7 @@ rust_binary(
     edition = "2021",
     version = "0.1.0",
     deps = [
+        ":perfetto_trace_rust",
         "@crates_io//:flatbuffers",
     ],
 )
