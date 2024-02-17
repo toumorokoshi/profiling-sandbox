@@ -31,7 +31,7 @@ fn main() {
 // generate_example_profile returns back an example Profile object.
 fn add_example_profile(mut builder: &mut FlatBufferBuilder) {
     let mut spans = Vec::new();
-    for i in 0..1000 {
+    for i in 0..100000 {
         // let name = builder.create_string("foo");
         let span = schema_generated::Span::create(
             &mut builder,

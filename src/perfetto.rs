@@ -10,7 +10,7 @@ pub fn to_prefetto_trace(profile: schema_generated::Profile) -> protos::Trace {
 // create an example perfetto trace
 pub fn create_example_trace() -> protos::Trace {
     let mut packets = vec![];
-    for i in 0..1000 {
+    for i in 0..100000 {
         let packet = protos::TracePacket {
             timestamp: Some(0),
             timestamp_clock_id: None,
