@@ -32,12 +32,12 @@ fn main() {
 fn add_example_profile(mut builder: &mut FlatBufferBuilder) {
     let mut spans = Vec::new();
     for i in 0..1000 {
-        let name = builder.create_string("foo");
+        // let name = builder.create_string("foo");
         let span = schema_generated::Span::create(
             &mut builder,
             &schema_generated::SpanArgs {
                 track_id: 1,
-                name: Some(name),
+                name: None,
                 start_time_ns: 0,
                 end_time_ns: 1000,
             },
@@ -67,12 +67,20 @@ mod tests {
     use super::*;
 
     #[bench]
-    fn bench_add_example_profile(b: &mut test::Bencher) {
+    fn bench_flatbuffer_serialize_deserialize(b: &mut test::Bencher) {
         b.iter(|| {
             let mut builder: FlatBufferBuilder = FlatBufferBuilder::new();
             add_example_profile(&mut builder);
             let profile =
                 flatbuffers::root::<schema_generated::Profile>(builder.finished_data()).unwrap();
+        });
+    }
+
+    #[bench]
+    fn bench_flatbuffer(b: &mut test::Bencher) {
+        b.iter(|| {
+            let mut builder: FlatBufferBuilder = FlatBufferBuilder::new();
+            add_example_profile(&mut builder);
         });
     }
 }

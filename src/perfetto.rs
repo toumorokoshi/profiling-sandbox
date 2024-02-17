@@ -37,7 +37,23 @@ mod tests {
     use super::*;
 
     #[bench]
-    fn bench_create_example_trace(b: &mut test::Bencher) {
+    fn bench_protobuf_serialize(b: &mut test::Bencher) {
+        b.iter(|| {
+            let trace = create_example_trace();
+            let mut buf = vec![];
+            trace.encode(&mut buf).unwrap();
+        });
+    }
+
+    #[bench]
+    fn bench_protobuf(b: &mut test::Bencher) {
+        b.iter(|| {
+            let trace = create_example_trace();
+        });
+    }
+
+    #[bench]
+    fn bench_protobuf_serialize_deserialize(b: &mut test::Bencher) {
         b.iter(|| {
             let trace = create_example_trace();
             let mut buf = vec![];
