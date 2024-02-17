@@ -1,4 +1,4 @@
-load("@rules_rust//rust:defs.bzl", "rust_binary")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_test")
 load("@rules_rust//proto/prost:defs.bzl", "rust_prost_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
@@ -14,6 +14,11 @@ rust_binary(
         "@crates_io//:flatbuffers",
         "@crates_io//:prost",
     ],
+)
+
+rust_test(
+    name = "profiling_sandbox_test",
+    crate = ":profiling_sandbox",
 )
 
 proto_library(
