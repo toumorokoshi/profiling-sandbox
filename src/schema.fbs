@@ -3,7 +3,7 @@
 table Category
 {
     // id 0 is reserved for "none".
-    id:uint32;
+    id:uint64;
     name:string;
 }
 
@@ -29,12 +29,21 @@ table Span {
     // name of a function or a system call, rather than the parameters
     // passed to it. The span may be grouped by name in other use cases
     // beyond tracing (e.g. flamegraphs)
-    name:string;
+    //
+    // stored as a unit64 reference in the reference table;
+    name_reference:uint64;
     // nanosecond granularity is necessary for spans that require high
     // granularity (e.g. CPU scheduling).
     // ns timestamps **should be** relative to the start of the trace.
-    start_time_ns:int64;
-    end_time_ns:int64;
+    start_time_ns:uint64;
+    end_time_ns:uint64;
+    // Height represents the height of the span when visualized.
+    // this value is optional, but is useful for categories of spans where there
+    // is a value that is associated with the range of time.
+    //
+    // Examples include:
+    // - memory allocated for spans tracking memory allocation per function call.
+    height:uint64;
 }
 
 // Events are used to represent events that occur at a specific point in
@@ -47,8 +56,38 @@ table Event {
     track_id:uint32;
     // a semantic name for the event. This can be used for as a rudimentary form
     // of grouping as well.
-    name:string;
+    //
+    // stored as a unit64 in the reference table.
+    name_reference:unit64;
     time_ns:uint64;
+}
+
+table Stack {
+    // storing the function call directly in a string is expensive, as it:
+    //   - duplicates data
+    //   - increases the size of the stack captured itself, which can slow down
+    //     reads. instead, we use a generic "reference" object which can be used
+    //     as a map. this can be:
+    //  - a pointer to a debug symbol.
+    //  - some other user-defined mapping.
+    //
+    // this way, a stack can be basically be a vector of references.
+    //
+    // although a string could be used, the value of the string may not be known
+    // at the time of instrumentation (e.g. debug symbols). Therefore it is more
+    // flexible to have references that can be mapped to afterward, and have the
+    // creator of the traces be responsible for the generation of said traces.
+    name_reference:uint64;
+    // store the height of the specific trace.
+    // TODO(yft): good example?
+    height:uint64;
+    time_ns:uint64;
+}
+
+// StackTrace represent a stack trace at a particular point in time.
+table StackTrace {
+    track:uint64;
+    stack:[Stack];
 }
 
 // A profile represents the parent object in which all other information is
@@ -71,4 +110,7 @@ table Profile {
     tracks:[Track];
     events:[Event];
     spans:[Span];
+    // TODO(yft): add reference map. (use a map vs an array because it enables faster lookup without
+    // scanning, and because reference integers may not be sequential (debug symbol pointers) which
+    // would have allowed for an array.
 }

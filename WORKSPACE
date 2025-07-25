@@ -93,6 +93,9 @@ crates_repository(
         "flatbuffers": crate.spec(
             version = "23.5.26",
         ),
+        "libbpf-rs": crate.spec(
+            version = "0",
+        ),
         "prost": crate.spec(
             version = "0",
         ),

@@ -12,6 +12,7 @@ rust_binary(
     deps = [
         ":perfetto_trace_rust",
         "@crates_io//:flatbuffers",
+        "@crates_io//:libbpf-rs",
         "@crates_io//:prost",
     ],
 )
